@@ -1,5 +1,4 @@
 import {ObsidianTicketHelperSettings} from "./settings/settings";
-import * as fs from "fs";
 import {TicketDefinition} from "./types";
 export class AutocompleteEngine {
 
@@ -13,13 +12,29 @@ export class AutocompleteEngine {
 		for(const index_file of index_files) {
 			app.vault.cachedRead(index_file).then((content) => {
 				const lines = content.split("\n");
-
+				lines.forEach((line) => {
+					const ticket = this.parseLineToTicketDefinition(line);
+					this.index.set(ticket.ticket_number, ticket);
+				})
 			})
 			//fs.readFileSync(index_file.basename)
 		}
+
+		console.log(this.index);
 	}
 
-	parseLineToTicketDefinition() {
+	parseLineToTicketDefinition(line: string): TicketDefinition {
+		// we assume that lines are formatted this way
+		// [TICKETNO]: [TITLE]---[TAG]
+		// TODO: add dynamic regex
+		const [ticket_number, line_rest] = line.split(this.settings.ticket_number_separator);
+		const [ticket_name, ticket_tag] = line_rest.split(this.settings.ticket_tag_separator);
 
+
+		return {
+			ticket_title: ticket_name,
+			ticket_number: +ticket_number,
+			ticket_tag: ticket_tag
+		}
 	}
 }
