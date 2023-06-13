@@ -6,15 +6,24 @@ import {AutocompleteEngine} from "./autocomplete-engine";
 export default class ObsidianTicketHelper extends Plugin {
 	settings: ObsidianTicketHelperSettings;
 	autocompleteEngine: AutocompleteEngine;
+	characterBuffer: string[];
+	characterPointer = 0;
 
 	private keyDownListener = (
 		editor: CodeMirror.Editor,
 		event: KeyboardEvent
 	) => {
+		if(event.key === this.settings.completion_trigger[this.characterPointer]) {
+			if(this.characterPointer + 1 === this.settings.completion_trigger.length) {
+				// search for following characters
+			}
+			this.characterPointer++;
+		}
 	}
 
 	async onload() {
 		await this.loadSettings();
+		this.characterBuffer = new Array<string>(this.settings.completion_trigger.length);
 		this.autocompleteEngine = new AutocompleteEngine(this.settings);
 
 		// This creates an icon in the left ribbon.

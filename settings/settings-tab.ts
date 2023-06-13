@@ -49,9 +49,9 @@ export class ObsidianTicketHelperSettingTab extends PluginSettingTab {
 			.setDesc(messages.SETTINGS_COMPLETION_TRIGGER_DESC)
 			.addSearch((cb) => {
 				cb.setPlaceholder("Default: " + constants.COMPLETION_TRIGGER_DEFAULT_VALUE)
-					.setValue(this.plugin.settings.index_folder)
-					.onChange((new_folder) => {
-						this.plugin.settings.index_folder = new_folder;
+					.setValue(this.plugin.settings.completion_trigger)
+					.onChange((new_completion_trigger) => {
+						this.plugin.settings.completion_trigger = new_completion_trigger;
 						this.plugin.saveSettings();
 					});
 			});

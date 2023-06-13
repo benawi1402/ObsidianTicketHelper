@@ -8,6 +8,7 @@ export class AutocompleteEngine {
 	}
 
 	updateIndex() {
+		// TODO add cached index that only updates index for changed files
 		const index_files = app.vault.getFiles().filter((file) => file.path.startsWith(this.settings.index_folder));
 		for(const index_file of index_files) {
 			app.vault.cachedRead(index_file).then((content) => {
