@@ -1,5 +1,12 @@
 # Obsidian Ticket Helper
 
+## About this project
+This project was created to help with a very specific use case in mind. You could say that this plugin might help everyone that needs to create notes containing tickets.
+Especially if you need to enter information about the tickets in a fast manner for time tracking, further information is accessible through e.g. a VPN and the notes will be used in a different context, e.g. another VPN.
+
+Saving all necessary information about a ticket while tracking time can be cumbersome and bears the risk of forgetting essential information.
+The intended usage includes some form of ticket-export by a ticket-system or an extension.
+
 ## How to use
 
 ### Initial setup
