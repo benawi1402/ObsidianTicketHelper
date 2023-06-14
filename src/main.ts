@@ -15,7 +15,7 @@ export default class ObsidianTicketHelper extends Plugin {
 	) => {
 		if(event.key === this.settings.completion_trigger[this.characterPointer]) {
 			if(this.characterPointer + 1 === this.settings.completion_trigger.length) {
-				// search for following characters
+
 			}
 			this.characterPointer++;
 		}

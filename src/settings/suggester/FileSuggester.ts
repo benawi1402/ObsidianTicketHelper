@@ -2,9 +2,9 @@
 
 import { TAbstractFile, TFile } from "obsidian";
 import { TextInputSuggest } from "./suggester";
-import { get_tfiles_from_folder } from "utils/Utils";
-import TemplaterPlugin from "main";
-import { errorWrapperSync } from "utils/Error";
+import { get_tfiles_from_folder } from "src/utils/Utils";
+import TemplaterPlugin from "src/main";
+import { errorWrapperSync } from "src/utils/Error";
 
 export enum FileSuggestMode {
 	TemplateFiles,
