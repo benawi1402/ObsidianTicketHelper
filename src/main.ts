@@ -25,6 +25,7 @@ export default class ObsidianTicketHelper extends Plugin {
 		await this.loadSettings();
 		this.characterBuffer = new Array<string>(this.settings.completion_trigger.length);
 		this.autocompleteEngine = new AutocompleteEngine(this.settings);
+		await this.autocompleteEngine.initialize();
 
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Obsidian Ticket Helper', (evt: MouseEvent) => {

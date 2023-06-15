@@ -6,15 +6,16 @@ export class AutocompleteEngine {
 	private index: Map<number, TicketDefinition> = new Map<number, TicketDefinition>();
 	private searchMap: Map<string, Array<number>> = new Map<string, Array<number>>();
 	constructor(private settings: ObsidianTicketHelperSettings) {
-		this.updateIndex();
-		this.buildSearchMap();
-		console.log(this.searchMap);
 	}
 
+	async initialize() {
+		await this.updateIndex();
+		this.buildSearchMap();
+	}
 
-
-
-	updateIndex() {
+	async updateIndex() {
+		this.index.clear();
+		console.log("Build index")
 		// TODO add cached index that only updates index for changed files
 		const index_files = app.vault.getFiles().filter((file) => file.path.startsWith(this.settings.index_folder));
 		for(const index_file of index_files) {
@@ -26,6 +27,8 @@ export class AutocompleteEngine {
 				})
 			})
 		}
+		console.log("Finished building index");
+		console.log(this.index);
 	}
 
 	parseLineToTicketDefinition(line: string): TicketDefinition {
@@ -44,14 +47,15 @@ export class AutocompleteEngine {
 	}
 
 	buildSearchMap() {
+		console.log("Build search map")
 		// requires index to be built first, assumes all keys are longer than default value
-
-		Array.from(this.index.keys()).forEach((key) => {
+		const keys : number[] = [...this.index.keys()];
+		keys.forEach((key) => {
 			const stringKey = key.toString();
-			let endPointer = constants.AUTOCOMPLETION_MINIMUM_CHARACTERS_DEFAULT_VALUE-1;
+			let endPointer = constants.AUTOCOMPLETION_MINIMUM_CHARACTERS_DEFAULT_VALUE;
 			const missingCharacters = stringKey.length - endPointer;
 
-			for(let i = 0; i < missingCharacters; i++) {
+			for(let i = 0; i <= missingCharacters; i++) {
 				endPointer += i;
 				const substring = stringKey.substring(0, endPointer);
 				const mapEntry = this.searchMap.get(substring);
