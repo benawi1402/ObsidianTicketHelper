@@ -15,7 +15,6 @@ export class AutocompleteEngine {
 
 	async updateIndex() {
 		this.index.clear();
-		console.log("Build index")
 		// TODO add cached index that only updates index for changed files
 		const index_files = app.vault.getFiles().filter((file) => file.path.startsWith(this.settings.index_folder));
 		for(const index_file of index_files) {
@@ -27,8 +26,6 @@ export class AutocompleteEngine {
 				})
 			})
 		}
-		console.log("Finished building index");
-		console.log(this.index);
 	}
 
 	parseLineToTicketDefinition(line: string): TicketDefinition {
@@ -38,7 +35,6 @@ export class AutocompleteEngine {
 		const [ticket_number, line_rest] = line.split(this.settings.ticket_number_separator);
 		const [ticket_name, ticket_tag] = line_rest.split(this.settings.ticket_tag_separator);
 
-
 		return {
 			ticket_title: ticket_name,
 			ticket_number: +ticket_number,
@@ -47,7 +43,6 @@ export class AutocompleteEngine {
 	}
 
 	buildSearchMap() {
-		console.log("Build search map")
 		// requires index to be built first, assumes all keys are longer than default value
 		const keys : number[] = [...this.index.keys()];
 		keys.forEach((key) => {
