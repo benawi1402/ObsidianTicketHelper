@@ -15,7 +15,11 @@ export default class ObsidianTicketHelper extends Plugin {
 		app.workspace.onLayoutReady(() => {
 			this.editorSuggester = new ObsidianTicketSuggest(app, this.settings);
 			this.registerEditorSuggest(this.editorSuggester);
-		})
+		});
+
+		this.registerInterval(
+			window.setInterval(() => this.editorSuggester?.updateAutocompleteIndex(), 10000)
+		);
 	}
 
 	async onunload() {

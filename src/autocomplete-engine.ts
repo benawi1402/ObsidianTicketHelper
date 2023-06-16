@@ -35,24 +35,28 @@ export class AutocompleteEngine {
 			await app.vault.cachedRead(index_file).then((content) => {
 				content.split("\n").forEach((line) => {
 					const ticket = this.parseLineToTicketDefinition(line);
-					this.index.set(ticket.ticket_number, ticket);
+					if(ticket) this.index.set(ticket.ticket_number, ticket);
 				})
 			})
 		}
 	}
 
-	parseLineToTicketDefinition(line: string): TicketDefinition {
+	parseLineToTicketDefinition(line: string): TicketDefinition | null {
 		// we assume that lines are formatted this way
 		// [TICKETNO]: [TITLE]---[TAG]
 		// TODO: add dynamic regex
-		const [ticket_number, line_rest] = line.split(this.settings.ticket_number_separator);
-		const [ticket_name, ticket_tag] = line_rest.split(this.settings.ticket_tag_separator);
+		const regexp = new RegExp(`^[0-9]{1,6}${this.settings.ticket_number_separator}.*${this.settings.ticket_tag_separator}.*$`);
+		if(regexp.test(line)) {
+			const [ticket_number, line_rest] = line.split(this.settings.ticket_number_separator);
+			const [ticket_name, ticket_tag] = line_rest.split(this.settings.ticket_tag_separator);
 
-		const ticket = new TicketDefinition();
-		ticket.ticket_title = ticket_name;
-		ticket.ticket_number = +ticket_number;
-		ticket.ticket_tag = ticket_tag;
-		return ticket;
+			const ticket = new TicketDefinition();
+			ticket.ticket_title = ticket_name;
+			ticket.ticket_number = +ticket_number;
+			ticket.ticket_tag = ticket_tag;
+			return ticket;
+		}
+		return null;
 	}
 
 	buildSearchMap() {
