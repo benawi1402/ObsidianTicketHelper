@@ -1,10 +1,24 @@
 import {ObsidianTicketHelperSettings} from "./settings/settings";
 import {TicketDefinition} from "./types";
 import {constants} from "./constants";
+
+export type Direction = {
+	index: number
+	direction: 'forward' | 'backward' | 'still'
+}
+
+export interface Completion {
+	category: string
+	value: string
+}
+
 export class AutocompleteEngine {
 
 	private index: Map<number, TicketDefinition> = new Map<number, TicketDefinition>();
 	private searchMap: Map<string, Array<number>> = new Map<string, Array<number>>();
+	private suggestions?: TicketDefinition[];
+
+
 	constructor(private settings: ObsidianTicketHelperSettings) {
 	}
 
@@ -39,20 +53,20 @@ export class AutocompleteEngine {
 			ticket_title: ticket_name,
 			ticket_number: +ticket_number,
 			ticket_tag: ticket_tag
-		}
+		} as TicketDefinition;
 	}
 
 	buildSearchMap() {
 		// requires index to be built first, assumes all keys are longer than default value
+		this.searchMap.clear();
 		const keys : number[] = [...this.index.keys()];
 		keys.forEach((key) => {
 			const stringKey = key.toString();
-			let endPointer = constants.AUTOCOMPLETION_MINIMUM_CHARACTERS_DEFAULT_VALUE;
+			const endPointer = constants.AUTOCOMPLETION_MINIMUM_CHARACTERS_DEFAULT_VALUE;
 			const missingCharacters = stringKey.length - endPointer;
 
 			for(let i = 0; i <= missingCharacters; i++) {
-				endPointer += i;
-				const substring = stringKey.substring(0, endPointer);
+				const substring = stringKey.substring(0, endPointer + i);
 				const mapEntry = this.searchMap.get(substring);
 				if(mapEntry) {
 					mapEntry.push(key);
@@ -65,37 +79,13 @@ export class AutocompleteEngine {
 		})
 	}
 
-	/*private showViewIn(
-		editor: CodeMirror.Editor,
-		completionWord = '',
-		{
-			autoSelect,
-			showEmptyMatch,
-		}: { autoSelect: boolean; showEmptyMatch: boolean } = {
-			autoSelect: true,
-			showEmptyMatch: true,
-		}
-	) {
-		this.suggestions = this.providers.reduce(
-			(acc, provider) => acc.concat(provider.matchWith(completionWord || '')),
-			[]
-		)
-
-		const suggestionsLength = this.suggestions.length
-		if (!this.isShown && autoSelect && suggestionsLength === 1) {
-			// Suggest automatically
-			this.selected.index = 0
-			this.selectSuggestion(editor)
-		} else if (!showEmptyMatch && suggestionsLength === 0) {
-			this.removeViewFrom(editor)
-		} else {
-			if (this.view) this.removeViewFrom(editor)
-
-			editor.addKeyMap(this.keyMaps)
-
-			this.view = generateView(this.suggestions, this.selected.index)
-			this.addClickListener(this.view, editor)
-			appendWidget(editor, this.view)
-		}
-	}*/
+	public getSuggestions(entry: string) {
+		// add caching
+		const searchMapEntry = this.searchMap.get(entry);
+		this.suggestions = searchMapEntry?.filter(ticketNumber => this.index.get(ticketNumber) != undefined).map((ticketNumber) => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			return this.index.get(ticketNumber)!;
+		});
+		return this.suggestions;
+	}
 }
