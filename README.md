@@ -11,7 +11,7 @@ The intended usage includes some form of ticket-export by a ticket-system or an 
 
 ### Initial setup
 
-1. Clone this repo into the .obsidian folder of your vault
+1. Clone this repo into the .obsidian/plugins/ folder of your vault
 2. Run `npm install` and `npm run build` (build needs to be re-run everytime you make changes to the code)
 
 ### Adding tickets to your index
