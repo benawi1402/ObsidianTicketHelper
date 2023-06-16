@@ -20,7 +20,7 @@ export default class ObsidianTicketSuggest extends EditorSuggest<TicketDefinitio
 		super(app);
 		this.settings = settings;
 		this.autocompleteEngine = new AutocompleteEngine(this.settings);
-		this.autocompleteEngine.initialize();
+		this.autocompleteEngine.refreshIndices();
 
 	}
 
@@ -28,17 +28,23 @@ export default class ObsidianTicketSuggest extends EditorSuggest<TicketDefinitio
 		return this.autocompleteEngine.getSuggestions(context.query) ?? [];
 	}
 
+	public updateAutocompleteIndex() {
+		this.autocompleteEngine.refreshIndices();
+	}
+
 	onTrigger(cursor: EditorPosition, editor: Editor, file: TFile | null): EditorSuggestTriggerInfo | null {
 		// todo refactor
-		const regexp = new RegExp("^(.*)" + this.settings.completion_trigger + "([0-9]{1,6})(.*)$")
-		const regexResult = regexp.exec(editor.getValue())
+		const regexp = new RegExp("^(.*)" + this.settings.completion_trigger + "([0-9]{1,6})(.*)$");
+		const regexResult = regexp.exec(editor.getLine(cursor.line))
 		if (regexResult) {
 			const positionInLine = regexResult[1].length;
-			return {
+			const result = {
 				start: {line: cursor.line, ch: positionInLine - 1},
 				end: {line: cursor.line, ch: positionInLine + this.settings.completion_trigger.length + regexResult[2].length},
 				query: regexResult[2]
 			}
+			console.log(result);
+			return result;
 		}
 		return null;
 	}

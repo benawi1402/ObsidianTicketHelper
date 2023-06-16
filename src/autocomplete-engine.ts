@@ -22,7 +22,7 @@ export class AutocompleteEngine {
 	constructor(private settings: ObsidianTicketHelperSettings) {
 	}
 
-	async initialize() {
+	async refreshIndices() {
 		await this.updateIndex();
 		this.buildSearchMap();
 	}
@@ -33,8 +33,7 @@ export class AutocompleteEngine {
 		const index_files = app.vault.getFiles().filter((file) => file.path.startsWith(this.settings.index_folder));
 		for(const index_file of index_files) {
 			app.vault.cachedRead(index_file).then((content) => {
-				const lines = content.split("\n");
-				lines.forEach((line) => {
+				content.split("\n").forEach((line) => {
 					const ticket = this.parseLineToTicketDefinition(line);
 					this.index.set(ticket.ticket_number, ticket);
 				})
