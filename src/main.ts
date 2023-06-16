@@ -10,14 +10,16 @@ export default class ObsidianTicketHelper extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
-		this.editorSuggester = new ObsidianTicketSuggest(app, this.settings);
-		this.registerEditorSuggest(this.editorSuggester);
+
 		this.addSettingTab(new ObsidianTicketHelperSettingTab(this.app, this));
+		app.workspace.onLayoutReady(() => {
+			this.editorSuggester = new ObsidianTicketSuggest(app, this.settings);
+			this.registerEditorSuggest(this.editorSuggester);
+		})
 	}
 
 	async onunload() {
 	}
-
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());

@@ -14,14 +14,13 @@ import {ObsidianTicketHelperSettings} from "./settings/settings";
 export default class ObsidianTicketSuggest extends EditorSuggest<TicketDefinition> {
 
 	private autocompleteEngine: AutocompleteEngine;
-	private settings: ObsidianTicketHelperSettings;
+	private readonly settings: ObsidianTicketHelperSettings;
 
 	constructor(app: App, settings: ObsidianTicketHelperSettings) {
 		super(app);
 		this.settings = settings;
 		this.autocompleteEngine = new AutocompleteEngine(this.settings);
-		this.autocompleteEngine.refreshIndices();
-
+		this.updateAutocompleteIndex();
 	}
 
 	getSuggestions(context: EditorSuggestContext): TicketDefinition[] | Promise<TicketDefinition[]> {
@@ -29,7 +28,9 @@ export default class ObsidianTicketSuggest extends EditorSuggest<TicketDefinitio
 	}
 
 	public updateAutocompleteIndex() {
-		this.autocompleteEngine.refreshIndices();
+		this.autocompleteEngine.refreshIndices().finally(() => {
+			console.debug("Finished Building Indices")
+		});
 	}
 
 	onTrigger(cursor: EditorPosition, editor: Editor, file: TFile | null): EditorSuggestTriggerInfo | null {
@@ -38,20 +39,18 @@ export default class ObsidianTicketSuggest extends EditorSuggest<TicketDefinitio
 		const regexResult = regexp.exec(editor.getLine(cursor.line))
 		if (regexResult) {
 			const positionInLine = regexResult[1].length;
-			const result = {
-				start: {line: cursor.line, ch: positionInLine - 1},
+			return {
+				start: {line: cursor.line, ch: positionInLine},
 				end: {line: cursor.line, ch: positionInLine + this.settings.completion_trigger.length + regexResult[2].length},
 				query: regexResult[2]
 			}
-			console.log(result);
-			return result;
 		}
 		return null;
 	}
 
 	renderSuggestion(value: TicketDefinition, el: HTMLElement): void {
 		const div = el.createDiv();
-		div.innerHTML = `${value.ticket_number}: ${value.ticket_title}---${value.ticket_tag}`;
+		div.innerHTML = value?.formatTicket();
 		el.append(div);
 	}
 
@@ -59,7 +58,7 @@ export default class ObsidianTicketSuggest extends EditorSuggest<TicketDefinitio
 		const start = this.context?.start;
 		const end = this.context?.end;
 		if(start && end && evt.key === "Enter") {
-			this.context?.editor?.replaceRange(`${value.ticket_number}: ${value.ticket_title}---${value.ticket_tag}`, start, end)
+			this.context?.editor?.replaceRange(value.formatTicket(), start, end)
 		}
 
 	}
