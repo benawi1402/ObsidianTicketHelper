@@ -3,7 +3,7 @@ import {DEFAULT_SETTINGS, ObsidianTicketHelperSettings} from "./settings/setting
 import {ObsidianTicketHelperSettingTab} from "./settings/settings-tab";
 import {AutocompleteEngine} from "./autocomplete-engine";
 import {TicketDefinition} from "./types";
-import ObsidianTicketSuggest from "./suggester";
+import ObsidianTicketSuggest from "./ticket-suggest";
 
 export default class ObsidianTicketHelper extends Plugin {
 	settings: ObsidianTicketHelperSettings;
@@ -18,8 +18,6 @@ export default class ObsidianTicketHelper extends Plugin {
 		await this.loadSettings();
 		this.editorSuggester = new ObsidianTicketSuggest(app, this.settings);
 		this.registerEditorSuggest(this.editorSuggester);
-		this.autocompleteEngine = new AutocompleteEngine(this.settings);
-		await this.autocompleteEngine.initialize();
 
 		this.addSettingTab(new ObsidianTicketHelperSettingTab(this.app, this));
 	}

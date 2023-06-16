@@ -1,7 +1,6 @@
 import {ObsidianTicketHelperSettings} from "./settings/settings";
 import {TicketDefinition} from "./types";
 import {constants} from "./constants";
-import {appendWidget, generateView} from "./view/view";
 
 export type Direction = {
 	index: number
@@ -59,15 +58,15 @@ export class AutocompleteEngine {
 
 	buildSearchMap() {
 		// requires index to be built first, assumes all keys are longer than default value
+		this.searchMap.clear();
 		const keys : number[] = [...this.index.keys()];
 		keys.forEach((key) => {
 			const stringKey = key.toString();
-			let endPointer = constants.AUTOCOMPLETION_MINIMUM_CHARACTERS_DEFAULT_VALUE;
+			const endPointer = constants.AUTOCOMPLETION_MINIMUM_CHARACTERS_DEFAULT_VALUE;
 			const missingCharacters = stringKey.length - endPointer;
 
 			for(let i = 0; i <= missingCharacters; i++) {
-				endPointer += i;
-				const substring = stringKey.substring(0, endPointer);
+				const substring = stringKey.substring(0, endPointer + i);
 				const mapEntry = this.searchMap.get(substring);
 				if(mapEntry) {
 					mapEntry.push(key);
