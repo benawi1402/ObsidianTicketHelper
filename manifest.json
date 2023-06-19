@@ -1,11 +1,11 @@
 {
 	"id": "obsidian-ticket-helper",
 	"name": "Obsidian Ticket Helper",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "This is a small plugin with some helpers for time tracking in ticket systems",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"author": "Frederik Maaßen",
+	"authorUrl": "",
+	"fundingUrl": "",
 	"isDesktopOnly": false
 }
