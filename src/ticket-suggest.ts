@@ -50,7 +50,7 @@ export default class ObsidianTicketSuggest extends EditorSuggest<TicketDefinitio
 
 	renderSuggestion(value: TicketDefinition, el: HTMLElement): void {
 		const div = el.createDiv();
-		div.innerHTML = value?.formatTicket();
+		div.innerHTML = value?.formatTicket(this.settings);
 		el.append(div);
 	}
 
@@ -58,7 +58,7 @@ export default class ObsidianTicketSuggest extends EditorSuggest<TicketDefinitio
 		const start = this.context?.start;
 		const end = this.context?.end;
 		if(start && end && evt.key === "Enter") {
-			this.context?.editor?.replaceRange(value.formatTicket(), start, end)
+			this.context?.editor?.replaceRange(value.formatTicket(this.settings), start, end)
 		}
 
 	}

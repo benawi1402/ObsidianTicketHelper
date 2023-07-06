@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-ticket-helper",
-	"version": "0.0.1",
+	"version": "0.1.2",
 	"description": "This is a ticket helper for obsidian",
 	"main": "src/main.js",
 	"scripts": {

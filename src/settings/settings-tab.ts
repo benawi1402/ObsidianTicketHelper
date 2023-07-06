@@ -21,8 +21,10 @@ export class ObsidianTicketHelperSettingTab extends PluginSettingTab {
 		containerEl.createEl('h2', {text: 'Obsidian Ticket Helper Settings'});
 		this.add_index_folder_setting();
 		this.add_autocompletion_trigger_setting();
-		this.add_ticket_number_separator_setting();
-		this.add_ticket_tag_separator_setting();
+		this.add_ticket_import_number_separator_setting();
+		this.add_ticket_import_tag_separator_setting();
+		this.add_ticket_export_number_separator_setting();
+		this.add_ticket_export_tag_separator_setting();
 	}
 
 	add_index_folder_setting(): void {
@@ -57,29 +59,57 @@ export class ObsidianTicketHelperSettingTab extends PluginSettingTab {
 			});
 	}
 
-	add_ticket_tag_separator_setting(): void {
+	add_ticket_import_tag_separator_setting(): void {
 		new Setting(this.containerEl)
-			.setName(messages.SETTINGS_TICKET_TAG_SEPARATOR_TITLE)
-			.setDesc(messages.SETTINGS_TICKET_TAG_SEPARATOR_DESC)
+			.setName(messages.SETTINGS_TICKET_IMPORT_TAG_SEPARATOR_TITLE)
+			.setDesc(messages.SETTINGS_TICKET_IMPORT_TAG_SEPARATOR_DESC)
 			.addSearch((cb) => {
 				cb.setPlaceholder("Default: " + constants.TICKET_TAG_SEPARATOR_DEFAULT_VALUE)
-					.setValue(this.plugin.settings.ticket_tag_separator)
+					.setValue(this.plugin.settings.ticket_import_tag_separator)
 					.onChange((new_ticket_tag_separator) => {
-						this.plugin.settings.ticket_tag_separator = new_ticket_tag_separator;
+						this.plugin.settings.ticket_import_tag_separator = new_ticket_tag_separator;
 						this.plugin.saveSettings();
 					});
 			});
 	}
 
-	add_ticket_number_separator_setting(): void {
+	add_ticket_import_number_separator_setting(): void {
 		new Setting(this.containerEl)
-			.setName(messages.SETTINGS_TICKET_NUMBER_SEPARATOR_TITLE)
-			.setDesc(messages.SETTINGS_TICKET_NUMBER_SEPARATOR_DESC)
+			.setName(messages.SETTINGS_TICKET_IMPORT_NUMBER_SEPARATOR_TITLE)
+			.setDesc(messages.SETTINGS_TICKET_IMPORT_NUMBER_SEPARATOR_DESC)
 			.addSearch((cb) => {
 				cb.setPlaceholder("Default: " + constants.TICKET_NUMBER_SEPARATOR_DEFAULT_VALUE)
-					.setValue(this.plugin.settings.ticket_number_separator)
+					.setValue(this.plugin.settings.ticket_import_number_separator)
 					.onChange((new_ticket_number_separator) => {
-						this.plugin.settings.ticket_number_separator = new_ticket_number_separator;
+						this.plugin.settings.ticket_import_number_separator = new_ticket_number_separator;
+						this.plugin.saveSettings();
+					});
+			});
+	}
+
+	add_ticket_export_tag_separator_setting(): void {
+		new Setting(this.containerEl)
+			.setName(messages.SETTINGS_TICKET_EXPORT_TAG_SEPARATOR_TITLE)
+			.setDesc(messages.SETTINGS_TICKET_EXPORT_TAG_SEPARATOR_DESC)
+			.addSearch((cb) => {
+				cb.setPlaceholder("Default: " + constants.TICKET_TAG_SEPARATOR_DEFAULT_VALUE)
+					.setValue(this.plugin.settings.ticket_export_tag_separator)
+					.onChange((new_ticket_tag_separator) => {
+						this.plugin.settings.ticket_export_tag_separator = new_ticket_tag_separator;
+						this.plugin.saveSettings();
+					});
+			});
+	}
+
+	add_ticket_export_number_separator_setting(): void {
+		new Setting(this.containerEl)
+			.setName(messages.SETTINGS_TICKET_EXPORT_NUMBER_SEPARATOR_TITLE)
+			.setDesc(messages.SETTINGS_TICKET_EXPORT_NUMBER_SEPARATOR_DESC)
+			.addSearch((cb) => {
+				cb.setPlaceholder("Default: " + constants.TICKET_NUMBER_SEPARATOR_DEFAULT_VALUE)
+					.setValue(this.plugin.settings.ticket_export_number_separator)
+					.onChange((new_ticket_number_separator) => {
+						this.plugin.settings.ticket_export_number_separator = new_ticket_number_separator;
 						this.plugin.saveSettings();
 					});
 			});
